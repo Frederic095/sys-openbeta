@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="sys-openbeta-api-main" doc:id="6173716c-1881-416d-8d8f-74c94da89c3c">
+        <http:listener doc:name="/api/v1/*" doc:id="fe1758f4-63e8-48b0-9f12-40ba251a382f" config-ref="sys-openbeta-api-httpListenerConfig" path="/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <set-variable value="#[import substringAfter, substringBefore from dw::core::Strings&#xA;&#xA;// Parse URI&#xA;var removeBasePathAndQP = substringAfter(attributes.requestUri, p('application.base-path'))&#xA;       then (&#xA;        if ($ contains &quot;?&quot;) substringBefore($, &quot;?&quot;)&#xA;        else $&#xA;       )&#xA;var requestName = &quot;$(attributes.method) $(removeBasePathAndQP)&quot;&#xA;&#xA;output application/json&#xA;---&#xA;{&#xA; correlationId: attributes.headers.'x-root-correlation-id' default correlationId,&#xA; flowId: uuid(),&#xA; startStep: &quot;Start $(requestName) flow&quot;,&#xA; endStep: &quot;Operation on $(requestName) completed successfully&quot;,&#xA; endpoint: removeBasePathAndQP&#xA;}]" doc:name="[metadata]" doc:id="c3ba265c-eed0-42aa-8115-e25d5e0ab5d4" variableName="metadata" />
+        <logger level="INFO" doc:name="Start" doc:id="d46c64e3-ad94-4a4d-91ec-7f59d6990cbd" message="#[%dw 2.0&#xA;var params = attributes.queryParams ++ attributes.uriParams&#xA;output application/json&#xA;---&#xA;{&#xA;    step: vars.metadata.startStep,&#xA;    data: {&#xA;        business: params ++ {},&#xA;        technical: {&#xA;            flowId: vars.metadata.flowId,&#xA;            correlationId: vars.metadata.correlationId&#xA;        }&#xA;    }&#xA;}]" category="${app.name}" />
+        <choice doc:name="heartbeat ?" doc:id="a1e8e93f-05c1-4dab-8539-1ba59a40ce1d">
+            <when expression="#[vars.metadata.endpoint == &quot;/heartbeat&quot;]">
+                <ee:transform doc:name="Heartbeat" doc:id="a7e427e0-2e9c-4013-a6a8-9268cfcad380">
+                    <ee:message>
+                        <ee:set-payload resource="modules/Heartbeat.dwl" />
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <apikit:router doc:name="APIkit Router" doc:id="44442167-5395-422b-9b12-12a0e2787892" config-ref="sys-openbeta-api-config" />
+                <ee:transform doc:name="StandardResponse" doc:id="82eaa6be-7bd5-44da-bfe4-64762eeaa59a">
+                    <ee:message>
+                        <ee:set-payload resource="modules/StandardResponse.dwl" />
+                    </ee:message>
+                </ee:transform>
+            </otherwise>
+        </choice>
+        <logger level="INFO" doc:name="End" doc:id="118af2c5-1806-4230-a60d-0d1a131c4456" message="#[%dw 2.0&#xA;output json&#xA;&#xA;---&#xA;{&#xA; step: vars.metadata.endStep,&#xA; data: {&#xA;  business: {},&#xA;  technical: {}&#xA; }&#xA;}]" category="${app.name}" />
+    </flow>
+    <!-- [STUDIO:"METHOD:\ENDPOINT(URI):sys-openbeta-api-config"]<flow name="METHOD:\ENDPOINT(URI):sys-openbeta-api-config" doc:id="fbd353e0-36d4-4c3f-843f-74896877d562" /> [STUDIO] -->
+    <flow name="get:\areas:sys-openbeta-api-config">
+        <ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  correlationId: "fe5zef1-194b-475c-8dee-0zef56zf4180",
+  statusCode: 500,
+  namespace: "APIKIT",
+  identifier: "INTERNAL_SERVER_ERROR",
+  description: "Something went wrong"
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>

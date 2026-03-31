@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>7d0f0abe-a0c1-42ca-86f0-6271534afa68</groupId>
+		<artifactId>paradiso-parent-pom</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<groupId>10339a90-b6cf-4a68-8cc1-ec2e54f05373</groupId>
+	<artifactId>sys-openbeta</artifactId>
+	<version>1.0.3</version>
+	<packaging>mule-application</packaging>
+
+	<name>sys-openbeta</name>
+
+	<description/>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.mule.tools.maven</groupId>
+				<artifactId>mule-maven-plugin</artifactId>
+				<version>${mule.maven.plugin.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<classifier>mule-application</classifier>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<app.runtime>4.10.1</app.runtime>
+
+		<tags/>
+		<categories>[]</categories>
+		<fields>[]</fields>
+		<mule.maven.plugin.version>4.6.1</mule.maven.plugin.version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>10339a90-b6cf-4a68-8cc1-ec2e54f05373</groupId>
+			<artifactId>sys-openbeta</artifactId>
+			<version>1.0.4</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>anypoint-exchange-v3</id>
+			<name>Anypoint Exchange</name>
+			<url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+			<layout>default</layout>
+		</repository>
+
+	</repositories>
+
+</project>
