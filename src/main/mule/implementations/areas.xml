@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="impl-get-areas" doc:id="4516815b-8619-459b-b6ad-a218b11c9107" >
+		<logger level="DEBUG" doc:name="Input Start" doc:id="db9a55b0-1081-43ce-b83b-8a9853f1b8fd" message='#[%dw 2.0&#10;output application/json indent=false&#10;---&#10;{&#10;    step: "Input Start",&#10;    data: {&#10;        business:{&#10;        	location: vars.location,&#10;        	level: vars.level&#10;        },&#10;        technical: {&#10;            flowId: vars.metadata.flowId,&#10;            correlationId: vars.metadata.correlationId&#10;        }&#10;    }&#10;}]' category="${app.name}" />
+		<flow-ref doc:name="sub-get-areas" doc:id="b6d8cc48-e886-4fae-8fb9-641c1a56eecb" name="sub-get-areas"/>
+		<ee:transform doc:name="Transform Message" doc:id="a5b2f258-e5eb-45ec-b2c9-5ac9a334f917" >
+			<ee:message >
+				<ee:set-payload resource="modules/FIlteredAreas.dwl" />
+			</ee:message>
+		</ee:transform>
+		<!-- [STUDIO:"Is not empty collection"]<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="f6abbddd-29d3-486d-bfad-21fe38f12125" /> [STUDIO] -->
+		<logger level="INFO" doc:name="End" doc:id="2a59cecc-22fb-4c69-aedf-b2a17a6c4c7e" message="#[%dw 2.0&#10;output json indent=false&#10;&#10;---&#10;{&#10; step: vars.metadata.endStep,&#10; data: {&#10;  business: {},&#10;  technical: {}&#10; }&#10;}]" category="${app.name}" />
+	</sub-flow>
+	<sub-flow name="sub-get-areas" doc:id="79f6ade4-e63b-4acc-965c-d16f1b4bce40" >
+		<ee:transform doc:name="Query" doc:id="6a6995da-927d-4a74-a261-c367d90d4ac5">
+			<ee:message>
+				<ee:set-payload resource="modules/OpenBetaQuery.dwl" />
+			</ee:message>
+		</ee:transform>
+		<http:request doc:name="Send Query" doc:id="8d560a12-7e97-4caa-859b-3961e846c1a0" method="POST" url="${openbeta.protocol}://${openbeta.host}" />
+		<logger level="DEBUG" doc:name="After Data Retrieved" doc:id="e6fc7d82-0f94-4f9d-abb6-81e7e3454714" message='#[%dw 2.0&#10;output application/json indent=false&#10;---&#10;{&#10;    step: "After query data retrieved",&#10;    data: {&#10;        business:{},&#10;        technical: {&#10;            flowId: vars.metadata.flowId,&#10;            correlationId: vars.metadata.correlationId&#10;        }&#10;    }&#10;}]' category="${app.name}" />
+		<ee:transform doc:name="openbeta to ADM" doc:id="91cd21c5-7578-4408-b76b-965960e7a76d">
+			<ee:message>
+				<ee:set-payload resource="modules/ADM.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="DEBUG" doc:name="After Data Transform" doc:id="94b9a1e9-4e90-476d-afe0-9398b29c992d" message='#[%dw 2.0&#10;output application/json indent=false&#10;---&#10;{&#10;    step: "After Data Transform",&#10;    data: {&#10;        business:&#10;        {&#10;        	data: sizeOf(payload)&#10;        	&#10;        },&#10;        technical: {&#10;            flowId: vars.metadata.flowId,&#10;            correlationId: vars.metadata.correlationId&#10;        }&#10;    }&#10;}]' category="${app.name}" />
+	</sub-flow>
+</mule>

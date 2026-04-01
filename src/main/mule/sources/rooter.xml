@@ -33,19 +33,8 @@
     </flow>
     <!-- [STUDIO:"METHOD:\ENDPOINT(URI):sys-openbeta-api-config"]<flow name="METHOD:\ENDPOINT(URI):sys-openbeta-api-config" doc:id="fbd353e0-36d4-4c3f-843f-74896877d562" /> [STUDIO] -->
     <flow name="get:\areas:sys-openbeta-api-config">
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  correlationId: "fe5zef1-194b-475c-8dee-0zef56zf4180",
-  statusCode: 500,
-  namespace: "APIKIT",
-  identifier: "INTERNAL_SERVER_ERROR",
-  description: "Something went wrong"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<set-variable value='#[attributes.queryParams.location default ""]' doc:name="[location]" doc:id="a1cc3cb9-82ae-4749-9e58-59c4ddc4d517" variableName="location"/>
+		<set-variable value='#[attributes.queryParams.level default ""]' doc:name="[level]" doc:id="4bde4e9f-687d-4774-a594-2d76440c9081" variableName="level"/>
+		<flow-ref doc:name="impl-get-areas" doc:id="ddccf28f-7f89-41b9-b8c3-018891a938cc" name="impl-get-areas"/>
     </flow>
 </mule>

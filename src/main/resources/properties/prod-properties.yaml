@@ -4,8 +4,9 @@ autodiscoveryId: "000000"
 
 # Listener
 https:
-  port: "8081"
+  port: "8082"
 ################################
 
-system-name:
-  password: "${secure::system-name.password}"
+openbeta:
+  protocol: "https"
+  host: "api.openbeta.io"

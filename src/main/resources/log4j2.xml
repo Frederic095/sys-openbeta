@@ -25,7 +25,7 @@
 
         <!-- Mule logger -->
         <AsyncLogger name="org.mule.runtime.core.internal.processor.LoggerMessageProcessor" level="INFO"/>
-
+		<AsyncLogger name="sys-openbeta" level="DEBUG"/>
         <AsyncRoot level="INFO">
             <AppenderRef ref="file"/>
         </AsyncRoot>
