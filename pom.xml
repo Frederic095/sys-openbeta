@@ -41,11 +41,10 @@
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>10339a90-b6cf-4a68-8cc1-ec2e54f05373</groupId>
 			<artifactId>sys-openbeta</artifactId>
-			<version>1.0.4</version>
+			<version>1.0.8</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>

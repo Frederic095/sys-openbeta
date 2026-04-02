@@ -19,7 +19,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 			port="${https.port}" />
 	</http:listener-config>
 	<apikit:config name="sys-openbeta-api-config"
-		api="resource::10339a90-b6cf-4a68-8cc1-ec2e54f05373:sys-openbeta:1.0.4:raml:zip:sys-openbeta.raml"
+		api="resource::10339a90-b6cf-4a68-8cc1-ec2e54f05373:sys-openbeta:1.0.8:raml:zip:sys-openbeta.raml"
 		outboundHeadersMapName="outboundHeaders"
 		httpStatusVarName="httpStatus" />
 	<configuration-properties
@@ -47,11 +47,11 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 		<logger level="INFO" doc:name="ERROR" doc:id="280e34b5-d6ec-4b2d-8178-d4110b7a96a9" message='#[%dw 2.0&#10;output json&#10;&#10;---&#10;{&#10;	step: "Global error handler",&#10;	data: {&#10;		business: {},&#10;		technical: payload&#10;		&#10;		}&#10;}]'/>
 	</sub-flow>
 	<error-handler name="globalsError_Handler" doc:id="72ebaf62-63e6-458a-96e9-6f39dfada834" >
-		<!-- [STUDIO:"AREA:NOT_FOUND"]<on-error-propagate enableNotifications="true" logException="true" doc:name="AREA:NOT_FOUND" doc:id="5f890587-150d-4287-9df6-277d2dbc38d4" type="AREA:NOT_FOUND">
-			<set-variable value="Climbing spots not found" doc:name="[description&#93;" doc:id="ec162fe7-a236-4cf8-89fc-be09e9123a5c" variableName="description"/>
-			<set-variable value="404" doc:name="[httpStatus&#93;" doc:id="2ac6a924-d2ea-41af-890f-89743630fbf1" variableName="httpStatus"/>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="AREAS:NOT_FOUND" doc:id="5f890587-150d-4287-9df6-277d2dbc38d4" type="AREAS:NOT_FOUND">
+			<set-variable value="Climbing spots not found" doc:name="[description]" doc:id="ec162fe7-a236-4cf8-89fc-be09e9123a5c" variableName="description"/>
+			<set-variable value="404" doc:name="[httpStatus]" doc:id="2ac6a924-d2ea-41af-890f-89743630fbf1" variableName="httpStatus"/>
 			<flow-ref doc:name="genericError" doc:id="69383490-0c3b-4a2d-8820-77ac5972ad38" name="genericError"/>
-		</on-error-propagate> [STUDIO] -->
+		</on-error-propagate>
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e4897f93-9269-46a1-8859-dc2d670aa533" >
 			<flow-ref doc:name="genericError" doc:id="2ce96aee-25df-4afb-ad13-ffe2ff1c3564" name="genericError"/>
 		</on-error-propagate>

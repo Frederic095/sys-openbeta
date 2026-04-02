@@ -1,15 +1,21 @@
 %dw 2.0
 output application/json
 
-fun mapAreas(area, parentRegion="") =
+
+var mapCotation = readUrl("classpath://Cotations.csv", "application/csv")
+
+fun cotationFunction(cotation) =
+    (mapCotation filter ($.source1 as String == cotation))[0].target default "Non noté"
+
+fun mapAreas(area, region=null) =
     do {
         var currentRegion = 
-            if (parentRegion == "") area.area_name
-            else parentRegion ++ " > " ++ area.area_name
+            if (region == null and area.area_name != "France") area.area_name
+            else region
 
         ---
         (
-            // 1. Mapper les climbs de la zone actuelle
+            // 1. Mapper les climbs
             (area.climbs default []) map (climb) -> {
                 location: {
                     region: currentRegion,
@@ -17,7 +23,7 @@ fun mapAreas(area, parentRegion="") =
                 },
                 grade: {
                     difficulty: climb.grades.french default null,
-                    level: null // à enrichir si tu veux une logique
+                    level: cotationFunction(climb.grades.french) 
                 },
                 coordinates: {
                     latitude: climb.metadata.lat default 46,
@@ -26,9 +32,8 @@ fun mapAreas(area, parentRegion="") =
             }
         )
         ++
-        // 2. Parcourir récursivement les enfants
+        // 2. Récursion
         ((area.children default []) flatMap (child) -> mapAreas(child, currentRegion))
     }
-
 ---
 payload.data.areas flatMap (area) -> mapAreas(area)

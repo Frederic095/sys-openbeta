@@ -33,7 +33,7 @@
     </flow>
     <!-- [STUDIO:"METHOD:\ENDPOINT(URI):sys-openbeta-api-config"]<flow name="METHOD:\ENDPOINT(URI):sys-openbeta-api-config" doc:id="fbd353e0-36d4-4c3f-843f-74896877d562" /> [STUDIO] -->
     <flow name="get:\areas:sys-openbeta-api-config">
-		<set-variable value='#[attributes.queryParams.location default ""]' doc:name="[location]" doc:id="a1cc3cb9-82ae-4749-9e58-59c4ddc4d517" variableName="location"/>
+		<set-variable value='#[attributes.queryParams.region default ""]' doc:name="[region]" doc:id="a1cc3cb9-82ae-4749-9e58-59c4ddc4d517" variableName="region"/>
 		<set-variable value='#[attributes.queryParams.level default ""]' doc:name="[level]" doc:id="4bde4e9f-687d-4774-a594-2d76440c9081" variableName="level"/>
 		<flow-ref doc:name="impl-get-areas" doc:id="ddccf28f-7f89-41b9-b8c3-018891a938cc" name="impl-get-areas"/>
     </flow>

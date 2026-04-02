@@ -2,11 +2,11 @@
 output application/json
 
 var level = vars.level
-var region = vars.location
+var region = vars.region
 
 ---
 
 payload filter (item) -> 
-    (levellevelParam == null or item.grade.level == level)
+    (level == "" or item.grade.level == level)
     and
-    (region == null or item.location.region == region)
+    (region == "" or item.location.region == region)

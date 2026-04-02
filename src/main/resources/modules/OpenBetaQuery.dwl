@@ -1,8 +1,7 @@
 %dw 2.0
 output application/json
 
-var location = vars.location
-var level = vars.level
+
 ---
 {
 	query: "query Area(\$filter: Filter) {
