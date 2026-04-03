@@ -16,11 +16,6 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<http:request doc:name="Send Query" doc:id="8d560a12-7e97-4caa-859b-3961e846c1a0" method="POST" url="${openbeta.protocol}://${openbeta.host}" />
 		<logger level="DEBUG" doc:name="After Data Retrieved" doc:id="e6fc7d82-0f94-4f9d-abb6-81e7e3454714" message='#[%dw 2.0&#10;output application/json indent=false&#10;---&#10;{&#10;    step: "After query data retrieved",&#10;    data: {&#10;        business:{},&#10;        technical: {&#10;            flowId: vars.metadata.flowId,&#10;            correlationId: vars.metadata.correlationId&#10;        }&#10;    }&#10;}]' category="${app.name}" />
 		<flow-ref doc:name="sub-get-areas" doc:id="b6d8cc48-e886-4fae-8fb9-641c1a56eecb" name="sub-get-areas"/>
-		<ee:transform doc:name="QueryParams Transform" doc:id="a5b2f258-e5eb-45ec-b2c9-5ac9a334f917" >
-			<ee:message >
-				<ee:set-payload resource="modules/FIlteredAreas.dwl" />
-			</ee:message>
-		</ee:transform>
 		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="f6abbddd-29d3-486d-bfad-21fe38f12125" >
 			<error-mapping sourceType="VALIDATION:EMPTY_COLLECTION" targetType="AREAS:NOT_FOUND" />
 		</validation:is-not-empty-collection>

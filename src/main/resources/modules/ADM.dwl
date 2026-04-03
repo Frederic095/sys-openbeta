@@ -1,39 +1,40 @@
 %dw 2.0
+
 output application/json
 
+var level = vars.level
+var region = vars.region
+var cotations = readUrl("classpath://Cotations.csv", "application/csv")
 
-var mapCotation = readUrl("classpath://Cotations.csv", "application/csv")
 
-fun cotationFunction(cotation) =
-    (mapCotation filter ($.source1 as String == cotation))[0].target default "Non noté"
+fun getLevel(grade) =
+    (cotations filter(item) ->(item.source1 == grade))[0].target default "Non noté"
 
-fun mapAreas(area, region=null) =
-    do {
-        var currentRegion = 
-            if (region == null and area.area_name != "France") area.area_name
-            else region
-
-        ---
-        (
-            // 1. Mapper les climbs
-            (area.climbs default []) map (climb) -> {
-                location: {
-                    region: currentRegion,
-                    spotName: climb.name
-                },
-                grade: {
-                    difficulty: climb.grades.french default null,
-                    level: cotationFunction(climb.grades.french) 
-                },
-                coordinates: {
-                    latitude: climb.metadata.lat default 46,
-                    longitude: climb.metadata.lng default 2
-                }
-            }
-        )
-        ++
-        // 2. Récursion
-        ((area.children default []) flatMap (child) -> mapAreas(child, currentRegion))
+fun mapClimbingSpots(climb, areaName) = {
+    "location": {
+        "region":   areaName,
+        "spotName": climb.name
+    },
+    "grade": {
+        "difficulty": climb.grades.french default "Pas de cotation",
+        "level":getLevel(climb.grades.french)
+    },
+    "coordinates": {
+        "latitude":  climb.metadata.lat  default 46,
+        "longitude": climb.metadata.lng  default 2
     }
+}
+
+
+var climbingSpots =
+    payload.data.areas.children[0]
+    flatMap (area) ->
+        flatten(area..climbs) map (climb) -> mapClimbingSpots(climb, area.area_name)
+
 ---
-payload.data.areas flatMap (area) -> mapAreas(area)
+
+climbingSpots
+filter (item) -> 
+    (level == "" or item.grade.level == level)
+    and
+    (region == "" or item.location.region == region)
