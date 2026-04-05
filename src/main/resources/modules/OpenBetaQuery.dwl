@@ -1,7 +1,6 @@
 %dw 2.0
 output application/json
 
-
 ---
 {
 	query: "query Area(\$filter: Filter) {

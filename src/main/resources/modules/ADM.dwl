@@ -1,5 +1,4 @@
 %dw 2.0
-
 output application/json
 
 var level = vars.level

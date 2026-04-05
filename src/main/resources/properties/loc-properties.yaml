@@ -10,4 +10,4 @@ https:
 openbeta:
   protocol: "https"
   host: "api.openbeta.io"
-  password: "${secure::system-name.password}"
+  
