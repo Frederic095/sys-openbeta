@@ -1,6 +1,6 @@
 ################################
 # API Manager
-autodiscoveryId: "20835953"
+autodiscoveryId: "000000"
 
 # Listener
 https:
@@ -10,3 +10,4 @@ https:
 openbeta:
   protocol: "https"
   host: "api.openbeta.io"
+  

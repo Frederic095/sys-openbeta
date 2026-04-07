@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="get-areas-test-suite.xml" />
+	<munit:test name="NOMINAL-get-areasTest"
+		doc:id="96562246-ff3d-4bdb-a47f-b5969fdc87d7">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock OpenBetaData" doc:id="d51cc9ac-800b-4d41-8921-6048678b379d" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Send Query" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="8d560a12-7e97-4caa-859b-3961e846c1a0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[output application/json &#10;--- &#10;readUrl("classpath://data/OpenBetaData.json","application/json")]' mediaType="application/json" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:spy doc:name="OpenBeta to ADM" doc:id="4aab6921-88e8-454f-87fe-1e5c0fe5c48e" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="OpenBeta to ADM" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="91cd21c5-7578-4408-b76b-965960e7a76d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:after-call >
+					<munit-tools:assert-equals doc:name="[ADM]" doc:id="7056b1a4-8302-4c39-814d-aa015b1494dd" actual="#[payload]" expected='#[readUrl("classpath://data/[ADM].json","application/json")]'/>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="variables" doc:id="f3dbae0c-73b0-4428-88b5-54d82686dc20" >
+				<munit:variables >
+					<munit:variable key="region" value='"Céüse"' mediaType="application/json" />
+					<munit:variable key="level" value='"Professionnel"' mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="impl-get-areas" doc:id="dadf7200-a90a-447c-a551-122b69da7a04" name="impl-get-areas" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Number of areas" doc:id="34d9b81a-0505-4552-b8e5-cabd66d130bd" actual="#[sizeOf(payload)]" expected="#[3]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FAIL-NOT-FOUND-get-areas-test-suiteTest" doc:id="3b8dcac7-1a05-46c1-9500-af7831bece12" expectedErrorType="AREAS:NOT_FOUND">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock OpenBetaData" doc:id="3090b2c4-674a-4c41-8ea9-14b28a99175d" processor="http:request">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="Send Query" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="8d560a12-7e97-4caa-859b-3961e846c1a0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value='#[output application/json &#10;--- &#10;readUrl("classpath://data/OpenBetaData.json","application/json")]' mediaType="application/json" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:spy doc:name="OpenBeta to ADM" doc:id="c4dc52e2-4a17-4730-b0fb-115d5479775f" processor="ee:transform" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="OpenBeta to ADM" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="91cd21c5-7578-4408-b76b-965960e7a76d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:after-call >
+					<munit-tools:assert-equals doc:name="[]" doc:id="1d8a38fb-a24b-4dc7-9d51-2299cc822cfb" actual="#[payload]" expected='#[[]]' />
+				</munit-tools:after-call>
+			</munit-tools:spy>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="variables" doc:id="4bfee92e-bf8b-454f-b3a3-80ea018b2e5f" >
+				<munit:variables >
+					<munit:variable key="region" value='"Céüse"' mediaType="application/json" />
+					<munit:variable key="level" value='"Débutant"' mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+			<try doc:name="Try" doc:id="bcbbd4b4-8dbf-48ac-bf55-a090bda6a42c" >
+				<flow-ref doc:name="sub-get-areas-test-suiteTest" doc:id="9aa4b19c-971c-4b38-a83c-1b65c4cfc6fb" name="sub-get-areas-test-suiteTest" />
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="55960ea5-d824-4eea-800e-f9ad6f6c10e5">
+						<munit-tools:assert-equals doc:name="statusCode = 404" doc:id="56db2a86-0947-4a47-8ee5-3df89a278c8b" actual="#[payload.statusCode]" expected="#[404]" />
+						<munit-tools:assert-equals doc:name="description = error.description" doc:id="0d153779-e294-42b6-91c3-dedbbb13fc93" actual="#[payload.description]" expected="Climbing spots not found" />
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</munit:execution>
+	</munit:test>
+	<sub-flow name="sub-get-areas-test-suiteTest" doc:id="a5b2676c-3e97-4dbe-ad22-94f08eb6ac3a" >
+		<try doc:name="Try" doc:id="55bdbd15-87d3-496f-9555-f4fdf92ca682" >
+			<flow-ref doc:name="impl-get-areas" doc:id="9539bdc6-4fcc-43fa-8434-40e658287d33" name="impl-get-areas" />
+			<error-handler ref="globalsError_Handler" />
+		</try>
+	</sub-flow>
+
+
+</mule>

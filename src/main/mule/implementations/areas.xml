@@ -25,6 +25,6 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<validation:is-not-empty-collection doc:name="Is not empty collection" doc:id="f6abbddd-29d3-486d-bfad-21fe38f12125" >
 			<error-mapping sourceType="VALIDATION:EMPTY_COLLECTION" targetType="AREAS:NOT_FOUND" />
 		</validation:is-not-empty-collection>
-		<logger level="INFO" doc:name="End" doc:id="2a59cecc-22fb-4c69-aedf-b2a17a6c4c7e" message="#[%dw 2.0&#10;output json indent=false&#10;&#10;---&#10;{&#10; step: vars.metadata.endStep,&#10; data: {&#10;  business: {},&#10;  technical: {}&#10; }&#10;}]" category="${app.name}" />
+		<logger level="DEBUG" doc:name="End" doc:id="2a59cecc-22fb-4c69-aedf-b2a17a6c4c7e" message="#[%dw 2.0&#10;output json indent=false&#10;&#10;---&#10;{&#10; step: vars.metadata.endStep,&#10; data: {&#10;  business: {},&#10;  technical: {}&#10; }&#10;}]" category="${app.name}" />
 	</sub-flow>
 </mule>

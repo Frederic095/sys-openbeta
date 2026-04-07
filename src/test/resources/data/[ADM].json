@@ -1,0 +1,44 @@
+[
+        {
+            "location": {
+                "region": "Céüse",
+                "spotName": "Realization"
+            },
+            "grade": {
+                "difficulty": "9a+",
+                "level": "Professionnel"
+            },
+            "coordinates": {
+                "latitude": 46,
+                "longitude": 2
+            }
+        },
+        {
+            "location": {
+                "region": "Céüse",
+                "spotName": "Bibliographie"
+            },
+            "grade": {
+                "difficulty": "9b+",
+                "level": "Professionnel"
+            },
+            "coordinates": {
+                "latitude": 46,
+                "longitude": 2
+            }
+        },
+        {
+            "location": {
+                "region": "Céüse",
+                "spotName": "Super Mickey"
+            },
+            "grade": {
+                "difficulty": "7b+",
+                "level": "Professionnel"
+            },
+            "coordinates": {
+                "latitude": 46,
+                "longitude": 2
+            }
+        }
+    ]

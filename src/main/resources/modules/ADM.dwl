@@ -16,7 +16,7 @@ fun mapClimbingSpots(climb, areaName) = {
     },
     "grade": {
         "difficulty": climb.grades.french default "Pas de cotation",
-        "level":getLevel(climb.grades.french)
+        "level": getLevel(climb.grades.french)
     },
     "coordinates": {
         "latitude":  climb.metadata.lat  default 46,
@@ -26,14 +26,14 @@ fun mapClimbingSpots(climb, areaName) = {
 
 
 var climbingSpots =
-    payload.data.areas.children[0]
+    payload.data.areas[0].children
     flatMap (area) ->
         flatten(area..climbs) map (climb) -> mapClimbingSpots(climb, area.area_name)
 
 ---
 
 climbingSpots
-filter (item) -> 
+filter (item) ->
     (level == "" or item.grade.level == level)
     and
     (region == "" or item.location.region == region)
