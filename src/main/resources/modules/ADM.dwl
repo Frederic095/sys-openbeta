@@ -19,8 +19,8 @@ fun mapClimbingSpots(climb, areaName) = {
         "level": getLevel(climb.grades.french)
     },
     "coordinates": {
-        "latitude":  climb.metadata.lat  default 46,
-        "longitude": climb.metadata.lng  default 2
+        "latitude":  climb.metadata.lat  default 46, // latitude de la France
+        "longitude": climb.metadata.lng  default 2 // longitude de la France
     }
 }
 

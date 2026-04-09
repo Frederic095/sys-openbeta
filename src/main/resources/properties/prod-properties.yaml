@@ -5,6 +5,8 @@ autodiscoveryId: "20835953"
 # Listener
 https:
   port: "8082"
+  
+response-timeout: "30000"
 ################################
 
 openbeta:

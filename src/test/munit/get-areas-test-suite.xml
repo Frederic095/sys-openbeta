@@ -34,18 +34,15 @@
 		</munit:behavior>
 		<munit:execution >
 			<munit:set-event doc:name="variables" doc:id="f3dbae0c-73b0-4428-88b5-54d82686dc20" >
-				<munit:variables >
-					<munit:variable key="region" value='"Céüse"' mediaType="application/json" />
-					<munit:variable key="level" value='"Professionnel"' mediaType="application/json" />
-				</munit:variables>
+				<munit:attributes value='#[output json&#10;---&#10;&#10;{&#10;	queryParams:{&#10;		level: "Professionnel",&#10;		region: "Céüse"&#10;	}&#10;	&#10;}]' />
 			</munit:set-event>
-			<flow-ref doc:name="impl-get-areas" doc:id="dadf7200-a90a-447c-a551-122b69da7a04" name="impl-get-areas" />
+			<flow-ref doc:name="get:\areas:sys-openbeta-api-config" doc:id="dadf7200-a90a-447c-a551-122b69da7a04" name="get:\areas:sys-openbeta-api-config" />
 		</munit:execution>
 		<munit:validation>
 			<munit-tools:assert-equals doc:name="Number of areas" doc:id="34d9b81a-0505-4552-b8e5-cabd66d130bd" actual="#[sizeOf(payload)]" expected="#[3]"/>
 		</munit:validation>
 	</munit:test>
-	<munit:test name="FAIL-NOT-FOUND-get-areas-test-suiteTest" doc:id="3b8dcac7-1a05-46c1-9500-af7831bece12" expectedErrorType="AREAS:NOT_FOUND">
+	<munit:test name="FAIL-NOT-FOUND-get-areas-test-suiteTest" doc:id="3b8dcac7-1a05-46c1-9500-af7831bece12">
 		<munit:behavior >
 			<munit-tools:mock-when doc:name="Mock OpenBetaData" doc:id="3090b2c4-674a-4c41-8ea9-14b28a99175d" processor="http:request">
 				<munit-tools:with-attributes>
@@ -67,26 +64,24 @@
 			</munit-tools:spy>
 		</munit:behavior>
 		<munit:execution >
-			<munit:set-event doc:name="variables" doc:id="4bfee92e-bf8b-454f-b3a3-80ea018b2e5f" >
-				<munit:variables >
-					<munit:variable key="region" value='"Céüse"' mediaType="application/json" />
-					<munit:variable key="level" value='"Débutant"' mediaType="application/json" />
-				</munit:variables>
+			<munit:set-event doc:name="variables" doc:id="ebc4c9ca-cae7-408a-b231-0e06e0dc012b">
+				<munit:attributes value='#[output json&#10;---&#10;&#10;{&#10;	queryParams:{&#10;		level: "Débutant",&#10;		region: "Céüse"&#10;	}&#10;	&#10;}]' />
 			</munit:set-event>
 			<try doc:name="Try" doc:id="bcbbd4b4-8dbf-48ac-bf55-a090bda6a42c" >
 				<flow-ref doc:name="sub-get-areas-test-suiteTest" doc:id="9aa4b19c-971c-4b38-a83c-1b65c4cfc6fb" name="sub-get-areas-test-suiteTest" />
-				<error-handler >
-					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="55960ea5-d824-4eea-800e-f9ad6f6c10e5">
-						<munit-tools:assert-equals doc:name="statusCode = 404" doc:id="56db2a86-0947-4a47-8ee5-3df89a278c8b" actual="#[payload.statusCode]" expected="#[404]" />
-						<munit-tools:assert-equals doc:name="description = error.description" doc:id="0d153779-e294-42b6-91c3-dedbbb13fc93" actual="#[payload.description]" expected="Climbing spots not found" />
-					</on-error-propagate>
+				<error-handler>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e4f76b3a-6174-44c6-9c35-f48f3c09e505" type="AREAS:NOT_FOUND"/>
 				</error-handler>
 			</try>
 		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="statusCode = 404" doc:id="56db2a86-0947-4a47-8ee5-3df89a278c8b" actual="#[payload.statusCode]" expected="#[404]" />
+			<munit-tools:assert-equals doc:name="description = error.description" doc:id="0d153779-e294-42b6-91c3-dedbbb13fc93" actual="#[payload.description]" expected="Climbing spots not found" />
+		</munit:validation>
 	</munit:test>
 	<sub-flow name="sub-get-areas-test-suiteTest" doc:id="a5b2676c-3e97-4dbe-ad22-94f08eb6ac3a" >
 		<try doc:name="Try" doc:id="55bdbd15-87d3-496f-9555-f4fdf92ca682" >
-			<flow-ref doc:name="impl-get-areas" doc:id="9539bdc6-4fcc-43fa-8434-40e658287d33" name="impl-get-areas" />
+			<flow-ref doc:name="get:\areas:sys-openbeta-api-config" doc:id="9539bdc6-4fcc-43fa-8434-40e658287d33" name="get:\areas:sys-openbeta-api-config" />
 			<error-handler ref="globalsError_Handler" />
 		</try>
 	</sub-flow>
